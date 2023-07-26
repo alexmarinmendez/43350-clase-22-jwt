@@ -1,5 +1,6 @@
 import { Router } from "express";
 import UserModel from "../dao/models/user.model.js";
+import { generateToken } from "../utils.js";
 
 const router = Router()
 
@@ -16,7 +17,10 @@ router.post('/register', async(req, res) => {
     const user = new UserModel(userNew)
     await user.save()
 
-    res.redirect('/session/login')
+    const access_token = generateToken(user)
+
+    // res.redirect('/session/login')
+    res.send({ status: 'success', access_token })
 })
 
 // Vista de Login
@@ -35,8 +39,11 @@ router.post('/login', async (req, res) => {
         })
     }
 
-    req.session.user = user
-    res.redirect('/products')
+    // req.session.user = user
+    const access_token = generateToken(user)
+    // res.redirect('/products')
+    // res.send({ status: 'success', access_token })
+    res.cookie('myToken', access_token).redirect('/products')
 })
 
 // Cerrar Session

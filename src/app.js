@@ -6,11 +6,13 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import __dirname from "./utils.js"
 import run from "./run.js";
+import cookieParser from "cookie-parser";
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(cookieParser('codersecret'))
 app.use(express.static(__dirname + "/public"))
 app.engine("handlebars", handlebars.engine())
 app.set("views", __dirname + "/views")
